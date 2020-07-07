@@ -1,0 +1,486 @@
+{
+  "info": {
+    "_postman_id": "859314ba-9491-4991-9447-ff738cfaa9fa",
+    "name": "PispSDK",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1.Retrieve access token for Payment request",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "7e85c455-dfb6-43f9-94ca-508164c566c1",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "let jsonData = pm.response.json();",
+              "let accessToken = jsonData.access_token;",
+              "pm.environment.set(\"paymentRequestAccessToken\", accessToken);"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "5752acdc-6f35-400d-9b0b-5da7db1cde7c",
+            "exec": [
+              "pm.environment.unset(\"paymentRequestAccessToken\");"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "grant_type",
+              "value": "client_credentials",
+              "type": "text"
+            },
+            {
+              "key": "client_id",
+              "value": "{{client_id}}",
+              "type": "text"
+            },
+            {
+              "key": "client_secret",
+              "value": "{{client_secret}}",
+              "type": "text",
+              "disabled": true
+            },
+            {
+              "key": "scope",
+              "value": "payments",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8080/token",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "token"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "2.Post Domestic Payment Consent request",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "92d8d44f-272b-4fe9-b91e-d5ccec8d916b",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "let jsonData = pm.response.json();",
+              "let paymentConsentId = jsonData.Data.ConsentId;",
+              "pm.environment.set(\"consentId\", paymentConsentId);"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "c9061188-0d31-4f0d-b98b-03941e25d1c0",
+            "exec": [
+              "pm.environment.unset(\"consentId\");"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{paymentRequestAccessToken}}"
+          },
+          {
+            "key": "x-fapi-financial-id",
+            "value": "{{x-fapi-financial-id}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "x-jws-signature",
+            "value": "{{x-jws-signature}}"
+          },
+          {
+            "key": "x-idempotency-key",
+            "value": "{{$guid}}"
+          },
+          {
+            "key": "x-fapi-interaction-id",
+            "value": "6ee26a85-d506-48bb-b483-f66e9c700b9I",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Data\": {\n    \"Initiation\": {\n      \"InstructionIdentification\": \"instr-identification\",\n      \"EndToEndIdentification\": \"e2e-identification\",\n      \"InstructedAmount\": {\n        \"Amount\": \"50.00\",\n        \"Currency\": \"{{psuDebtorAccountCurrency}}\"\n      },\n      \"DebtorAccount\": null,\n      \"CreditorAccount\": {\n        \"SchemeName\": \"IBAN\",\n        \"Identification\": \"BE56456394728288\",\n        \"Name\": \"ACME DIY\",\n        \"SecondaryIdentification\": \"secondary-identif\"\n      },\n      \"RemittanceInformation\": {\n        \"Unstructured\": \"Tools\",\n        \"Reference\": \"Tools\"\n      }\n    }\n  },\n  \"Risk\": {\n    \"PaymentContextCode\": \"EcommerceGoods\",\n    \"MerchantCategoryCode\": null,\n    \"MerchantCustomerIdentification\": null,\n    \"DeliveryAddress\": null\n  }\n}\n"
+        },
+        "url": {
+          "raw": "http://localhost:8080/open-banking/v3.1/pisp/domestic-payment-consents",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "open-banking",
+            "v3.1",
+            "pisp",
+            "domestic-payment-consents"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "3.GetAuthorizeConsentURL",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "27bea078-fe28-4628-9399-0171c3c3eb61",
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "83c461a5-aa8a-46a9-9033-f8d97ecc87ef",
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "conten",
+            "value": "application/json",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/open-banking/v3.1/pisp/authorization.oauth2?request={{consentId}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "open-banking",
+            "v3.1",
+            "pisp",
+            "authorization.oauth2"
+          ],
+          "query": [
+            {
+              "key": "request",
+              "value": "{{consentId}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "4.OBToken",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "3f17b21e-dbae-4a39-8481-690f0404f99b",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "let jsonData = pm.response.json();",
+              "let accessToken = jsonData.access_token;",
+              "pm.environment.set(\"access_token\", accessToken);"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "8bd8a349-6dc0-41d4-bdef-254a48cd47bd",
+            "exec": [
+              "pm.environment.unset(\"access_token\");"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/x-www-form-urlencoded",
+            "type": "text"
+          },
+          {
+            "key": "Code",
+            "value": "2a562ff5-aa71-42d9-82d4-7695d1152586",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "client_id",
+              "value": "{{client_id}}",
+              "type": "text"
+            },
+            {
+              "key": "client_secret",
+              "value": "{{client_secret}}",
+              "type": "text"
+            },
+            {
+              "key": "redirect_uri",
+              "value": "{{redirect_uri}}",
+              "type": "text"
+            },
+            {
+              "key": "grant_type",
+              "value": "authorization_code",
+              "type": "text"
+            },
+            {
+              "key": "code",
+              "value": "7a4d18eb-3fdc-438b-abae-6c78a116786c",
+              "type": "text"
+            },
+            {
+              "key": "code_verifier",
+              "value": "{{code_verifier}}",
+              "type": "text"
+            },
+            {
+              "key": "code_challenge_method",
+              "value": "{{code_challenge_method}}",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8080/token",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "token"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "5.Post Domestic Payment",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "3aaa61e6-b360-4c9d-9cf4-9ebd5f95e60e",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Request status is AcceptedSettlementInProcess\", function () {",
+              "    pm.response.to.have.jsonBody('Data.Status', \"AcceptedSettlementInProcess\");",
+              "});",
+              "",
+              "let jsonData = pm.response.json();",
+              "let paymentSelfLink = jsonData.Links.Self;",
+              "let domesticPaymentId = jsonData.Data.DomesticPaymentId;",
+              "pm.environment.set(\"paymentSelfLink\", paymentSelfLink);",
+              "pm.environment.set(\"domesticPaymentId\", domesticPaymentId);",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "8804b7d7-8c2c-4ab8-bbb6-911a4d99bc63",
+            "exec": [
+              "pm.environment.unset(\"paymentSelfLink\");"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          },
+          {
+            "key": "x-fapi-financial-id",
+            "value": "{{x-fapi-financial-id}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "x-jws-signature",
+            "value": "{{x-jws-signature}}"
+          },
+          {
+            "key": "x-idempotency-key",
+            "value": "{{$guid}}"
+          },
+          {
+            "key": "Host",
+            "type": "text",
+            "value": "api-qa-nwb.ob.managedtest.com",
+            "disabled": true
+          },
+          {
+            "key": "x-fapi-interaction-id",
+            "type": "text",
+            "value": "de4cb710-2e58-4019-bbde-566f34e14FR8",
+            "disabled": true
+          },
+          {
+            "key": "x-fapi-customer-ip-address",
+            "type": "text",
+            "value": "127.0.0.1",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"Data\": {\r\n  \t\"ConsentId\": \"{{consentId}}\",\r\n    \"Initiation\": {\r\n      \"InstructionIdentification\": \"instr-identification\",\r\n      \"EndToEndIdentification\": \"e2e-identification\",\r\n      \"InstructedAmount\": {\r\n        \"Amount\": \"50.00\",\r\n        \"Currency\": \"{{psuDebtorAccountCurrency}}\"\r\n      },\r\n      \"DebtorAccount\": null,\r\n      \"CreditorAccount\": {\r\n        \"SchemeName\": \"IBAN\",\r\n        \"Identification\": \"BE56456394728288\",\r\n        \"Name\": \"ACME DIY\",\r\n        \"SecondaryIdentification\": \"secondary-identif\"\r\n      },\r\n      \"RemittanceInformation\": {\r\n        \"Unstructured\": \"Tools\",\r\n        \"Reference\": \"Tools\"\r\n      }\r\n    }\r\n  },\r\n  \"Risk\": {\r\n    \"PaymentContextCode\": \"EcommerceGoods\",\r\n    \"MerchantCategoryCode\": null,\r\n    \"MerchantCustomerIdentification\": null,\r\n    \"DeliveryAddress\": null\r\n  }\r\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/open-banking/v3.1/pisp/domestic-payments",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "open-banking",
+            "v3.1",
+            "pisp",
+            "domestic-payments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "6.Get Domestic Payment status",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "a3a0b90b-1fbc-40ad-8e6f-5e5251c47f6d",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Request status is Rejected\", function () {",
+              "    pm.response.to.have.jsonBody('Data.Status', \"AcceptedSettlementCompleted\");",
+              "});",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          },
+          {
+            "key": "x-fapi-financial-id",
+            "value": "{{x-fapi-financial-id}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/open-banking/v3.1/pisp/domestic-payments/{{domesticPaymentId}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "open-banking",
+            "v3.1",
+            "pisp",
+            "domestic-payments",
+            "{{domesticPaymentId}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "protocolProfileBehavior": {}
+}
