@@ -17,4 +17,6 @@ public final class Constants {
     public static final String CODE_VERIFIER_HEADER = "code_verifier";
     public static final String CODE_CHALLENGE_METHOD_HEADER = "code_challenge_method";
     public static final String CONSENT_ID_HEADER = "request";
+
+    public static final String SESSION_ID = "session_id";
 }

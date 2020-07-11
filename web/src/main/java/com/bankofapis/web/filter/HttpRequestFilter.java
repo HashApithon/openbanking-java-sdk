@@ -36,6 +36,7 @@ public class HttpRequestFilter extends OncePerRequestFilter {
 
         httpRequestHeader.setAuthorization(request.getHeader(Constants.AUTHORIZATION_HEADER));
         httpRequestHeader.setFinancialId(request.getHeader(Constants.FINANCIAL_ID_HEADER));
+        httpRequestHeader.setSessionId(request.getHeader(Constants.SESSION_ID));
 
         if(!StringUtils.isEmpty(request.getHeader(Constants.JWS_SIGNATURE_HEADER)))
             httpRequestHeader.setJwsSignature(request.getHeader(Constants.JWS_SIGNATURE_HEADER));
