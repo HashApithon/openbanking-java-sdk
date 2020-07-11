@@ -1,7 +1,11 @@
 package com.bankofapis.web.service;
 
 import com.bankofapis.core.model.accounts.*;
+import com.bankofapis.core.model.common.HttpRequestHeader;
+import com.bankofapis.core.model.token.TokenRequest;
+import com.bankofapis.core.model.token.TokenResponse;
 import com.bankofapis.remote.service.AispRemote;
+import com.bankofapis.remote.service.TokenRemote;
 import com.bankofapis.web.filter.HttpRequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +17,32 @@ public class AispService {
     private static final Logger logger = LoggerFactory.getLogger(AispService.class);
 
     private AispRemote aispRemote;
+    private TokenRemote tokenRemote;
 
-    public AispService(AispRemote aispRemote) {
+    public AispService(AispRemote aispRemote, TokenRemote tokenRemote) {
         this.aispRemote = aispRemote;
+        this.tokenRemote = tokenRemote;
+    }
+
+    public void initialize(){
+        try {
+            TokenRequest tokenRequest = new TokenRequest();
+            TokenResponse tokenResponse = tokenRemote.generateToken(tokenRequest);
+
+            HttpRequestHeader httpRequestHeader = HttpRequestContext.get();
+            httpRequestHeader.setAuthorization(tokenResponse.getAccessToken());
+
+            OBReadDomesticConsent obReadDataDomesticConsent = new OBReadDomesticConsent();
+            OBReadDomesticConsentResponse obReadDomesticConsentResponse =
+                    aispRemote.createAispConsent(obReadDataDomesticConsent, HttpRequestContext.get());
+
+            httpRequestHeader.setAuthorizationURL(
+                    aispRemote.createAuthorizeUri(obReadDomesticConsentResponse.getData().getConsentId()));
+
+        } catch (HttpStatusCodeException ex) {
+            logger.error(ex.getResponseBodyAsString(), ex);
+            throw ex;
+        }
     }
 
     public OBReadDomesticConsentResponse createAispConsent(OBReadDomesticConsent obReadDataDomesticConsent) {

@@ -7,6 +7,15 @@ public class HttpRequestHeader {
     private String idempotencyKey;
     private String jwsSignature;
     private String sessionId;
+    private String authorizationURL;
+
+    public String getAuthorizationURL() {
+        return authorizationURL;
+    }
+
+    public void setAuthorizationURL(String authorizationURL) {
+        this.authorizationURL = authorizationURL;
+    }
 
     public String getAuthorization() {
         return authorization;
