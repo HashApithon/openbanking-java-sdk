@@ -1,3 +1,5 @@
+/*
+
 package com.bankofapis.web.filter;
 
 import org.slf4j.Logger;
@@ -17,7 +19,8 @@ public class RedirectAuthorizationFilter extends OncePerRequestFilter {
                                     HttpServletResponse httpServletResponse, FilterChain filterChain) {
         try {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
-            httpServletResponse.encodeRedirectURL(HttpRequestContext.get().getAuthorizationURL());
+            httpServletResponse.setHeader("Location", httpServletResponse.encodeRedirectURL(HttpRequestContext.get().getAuthorizationURL()));
+            httpServletResponse.setStatus(302);
         } catch (Exception ex) {
             logger.error("Error occurred while processing the request");
         } finally {
@@ -25,3 +28,5 @@ public class RedirectAuthorizationFilter extends OncePerRequestFilter {
         }
     }
 }
+
+*/

@@ -8,6 +8,9 @@ public class ClientConfig {
     @Value("${client.id}")
     private String clientId;
 
+    @Value("${client.secret}")
+    private String clientSecret;
+
     @Value("${client.redirectUri}")
     private String redirectUri;
 
@@ -28,6 +31,10 @@ public class ClientConfig {
 
     public String getClientId() {
         return clientId;
+    }
+
+    public String getClientSecret() {
+        return clientSecret;
     }
 
     public String getRedirectUri() {

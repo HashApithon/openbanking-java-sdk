@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import static com.bankofapis.core.model.common.Constants.CONSENT_ID_HEADER;
 import static com.bankofapis.remote.common.Endpoints.*;
@@ -22,8 +23,9 @@ public class AispController {
     }
 
     @GetMapping(value = ACCOUNT_INIT)
-    public void initialize(){
-        aispService.initialize();
+    public void   initialize(HttpServletResponse response) {
+        response.setHeader("Location", aispService.initialize());
+        response.setStatus(302);
     }
 
     @PostMapping(value = ACCOUNT_ACCESS_CONSENT_ENDPOINT)
