@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import static com.bankofapis.core.model.common.Constants.CONSENT_ID_HEADER;
 import static com.bankofapis.remote.common.Endpoints.*;
@@ -26,6 +27,12 @@ public class PispController {
         this.pispService = pispService;
     }
 
+    @GetMapping(value = OB_JOURNEY_INIT)
+    public void initialize(HttpServletResponse response) throws Exception {
+        response.setHeader("Location", pispService.initialize());
+        response.setStatus(302);
+    }
+
     @PostMapping(value = DOMESTIC_PAYMENT_CONSENTS_ENDPOINT)
     public ResponseEntity<OBWriteDomesticConsentResponse> paymentConsentSetup(@RequestBody OBWriteDomesticConsent obWriteDomesticConsent2) {
         OBWriteDomesticConsentResponse obWriteDataDomesticConsentResponse2 = pispService.createPaymentConsent(obWriteDomesticConsent2);
@@ -38,7 +45,7 @@ public class PispController {
     }
 
     @PostMapping(value = DOMESTIC_PAYMENTS_ENDPOINT)
-    public ResponseEntity<OBWriteDomesticResponse> submitPayments(@RequestBody OBWriteDomestic obWriteDomestic2) {
+    public ResponseEntity<OBWriteDomesticResponse> submitPayments(@RequestBody(required = false) OBWriteDomestic obWriteDomestic2) throws Exception {
         OBWriteDomesticResponse paymentsSubmit = pispService.createDomesticPayment(obWriteDomestic2);
         return new ResponseEntity<>(paymentsSubmit, HttpStatus.CREATED);
     }

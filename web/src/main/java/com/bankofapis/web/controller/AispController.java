@@ -22,8 +22,8 @@ public class AispController {
         this.aispService = aispService;
     }
 
-    @GetMapping(value = ACCOUNT_INIT)
-    public void   initialize(HttpServletResponse response) {
+    @GetMapping(value = OB_JOURNEY_INIT)
+    public void initialize(HttpServletResponse response) {
         response.setHeader("Location", aispService.initialize());
         response.setStatus(302);
     }

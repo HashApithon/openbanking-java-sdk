@@ -16,6 +16,9 @@ import org.springframework.web.client.HttpStatusCodeException;
 
 import java.util.Arrays;
 
+import static com.bankofapis.core.model.common.Constants.CLIENT_CRED_GRANT_TYPE_VALUE;
+import static com.bankofapis.core.model.common.Constants.SCOPE_ACCOUNT_VALUE;
+
 public class AispService {
 
     private static final Logger logger = LoggerFactory.getLogger(AispService.class);
@@ -30,16 +33,21 @@ public class AispService {
         this.clientConfig = clientConfig;
     }
 
-    public String initialize(){
+    public String initialize() {
         try {
+
+            if(Boolean.FALSE.equals(clientConfig.isInitRunning())) {
+                throw new RuntimeException("SDK is not running in INIT mode");
+            }
+
             TokenRequest tokenRequest = new TokenRequest();
             tokenRequest.setClientId(clientConfig.getClientId());
             tokenRequest.setClientSecret(clientConfig.getClientSecret());
-            tokenRequest.setScope("accounts");
-            tokenRequest.setGrantType("client_credentials");
+            tokenRequest.setScope(SCOPE_ACCOUNT_VALUE);
+            tokenRequest.setGrantType(CLIENT_CRED_GRANT_TYPE_VALUE);
             TokenResponse tokenResponse = tokenRemote.generateToken(tokenRequest);
 
-            HttpRequestHeader httpRequestHeader = new HttpRequestHeader();
+            HttpRequestHeader httpRequestHeader = HttpRequestContext.get();
             httpRequestHeader.setAuthorization(tokenResponse.getTokenType()+" "+tokenResponse.getAccessToken());
             httpRequestHeader.setFinancialId(clientConfig.getFinancialId());
             HttpRequestContext.set(httpRequestHeader);
@@ -58,7 +66,7 @@ public class AispService {
             OBReadDomesticConsentResponse obReadDomesticConsentResponse =
                     aispRemote.createAispConsent(obReadDataDomesticConsent, HttpRequestContext.get());
 
-            return  aispRemote.createAuthorizeUri(obReadDomesticConsentResponse.getData().getConsentId());
+            return  createAuthorizeUri(obReadDomesticConsentResponse.getData().getConsentId());
         } catch (HttpStatusCodeException ex) {
             logger.error(ex.getResponseBodyAsString(), ex);
             throw ex;
