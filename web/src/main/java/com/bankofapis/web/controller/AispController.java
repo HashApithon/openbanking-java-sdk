@@ -23,9 +23,12 @@ public class AispController {
     }
 
     @GetMapping(value = ACCOUNT_INIT)
-    public void   initialize(HttpServletResponse response) {
+    public String   initialize(HttpServletResponse response) {
+        /*response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Location", aispService.initialize());
-        response.setStatus(302);
+        response.setStatus(302);*/
+
+        return aispService.initialize();
     }
 
     @PostMapping(value = ACCOUNT_ACCESS_CONSENT_ENDPOINT)

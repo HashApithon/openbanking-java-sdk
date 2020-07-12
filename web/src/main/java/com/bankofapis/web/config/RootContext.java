@@ -7,14 +7,18 @@ import com.bankofapis.remote.config.RemoteContext;
 import com.bankofapis.remote.service.AispRemote;
 import com.bankofapis.remote.service.PispRemote;
 import com.bankofapis.remote.service.TokenRemote;
-import com.bankofapis.web.service.PispService;
 import com.bankofapis.web.filter.HttpRequestFilter;
 import com.bankofapis.web.service.AispService;
+import com.bankofapis.web.service.PispService;
 import com.bankofapis.web.service.TokenService;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.Ordered;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
@@ -34,11 +38,21 @@ public class RootContext {
 
     @Bean
     public FilterRegistrationBean<OncePerRequestFilter> httpRequestFilter(){
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+
         FilterRegistrationBean<OncePerRequestFilter> registrationBean
-            = new FilterRegistrationBean<>();
+            = new FilterRegistrationBean<>(new CorsFilter(source));
 
         registrationBean.setFilter(new HttpRequestFilter());
         registrationBean.addUrlPatterns("/open-banking/*");
+
+        registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
 
         return registrationBean;
     }
