@@ -29,6 +29,9 @@ public class ClientConfig {
     @Value("${client.tokenUrl}")
     private String tokenUrl;
 
+    @Value("${client.initRunning:false}")
+    private boolean initRunning;
+
     public String getClientId() {
         return clientId;
     }
@@ -59,5 +62,9 @@ public class ClientConfig {
 
     public String getTokenUrl() {
         return tokenUrl;
+    }
+
+    public boolean isInitRunning() {
+        return initRunning;
     }
 }

@@ -13,6 +13,7 @@ client:
   authorizationUsername: 123456789012@team.acc.org
   authorizationAccount: 50000012345601
   tokenUrl: https://ob.rbs.useinfinite.io/token
+  initRunning: true
 
 
 tls:
