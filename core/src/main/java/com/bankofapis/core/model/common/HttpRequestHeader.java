@@ -6,6 +6,16 @@ public class HttpRequestHeader {
     private String financialId;
     private String idempotencyKey;
     private String jwsSignature;
+    private String sessionId;
+    private String authorizationURL;
+
+    public String getAuthorizationURL() {
+        return authorizationURL;
+    }
+
+    public void setAuthorizationURL(String authorizationURL) {
+        this.authorizationURL = authorizationURL;
+    }
 
     public String getAuthorization() {
         return authorization;
@@ -37,5 +47,13 @@ public class HttpRequestHeader {
 
     public void setJwsSignature(String jwsSignature) {
         this.jwsSignature = jwsSignature;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 }

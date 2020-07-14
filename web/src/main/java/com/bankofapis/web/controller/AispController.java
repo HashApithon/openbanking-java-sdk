@@ -4,10 +4,12 @@ import com.bankofapis.core.model.accounts.*;
 import com.bankofapis.web.service.AispService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import static com.bankofapis.remote.common.Endpoints.*;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import static com.bankofapis.core.model.common.Constants.CONSENT_ID_HEADER;
+import static com.bankofapis.remote.common.Endpoints.*;
 
 @RestController
 @RequestMapping("/open-banking/*/aisp")
@@ -18,6 +20,12 @@ public class AispController {
     @Autowired
     public AispController(AispService aispService) {
         this.aispService = aispService;
+    }
+
+    @GetMapping(value = OB_JOURNEY_INIT)
+    public void initialize(HttpServletResponse response) {
+        response.setHeader("Location", aispService.initialize());
+        response.setStatus(302);
     }
 
     @PostMapping(value = ACCOUNT_ACCESS_CONSENT_ENDPOINT)

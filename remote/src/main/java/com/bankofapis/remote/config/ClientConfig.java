@@ -8,6 +8,9 @@ public class ClientConfig {
     @Value("${client.id}")
     private String clientId;
 
+    @Value("${client.secret}")
+    private String clientSecret;
+
     @Value("${client.redirectUri}")
     private String redirectUri;
 
@@ -26,8 +29,15 @@ public class ClientConfig {
     @Value("${client.tokenUrl}")
     private String tokenUrl;
 
+    @Value("${client.initRunning:false}")
+    private boolean initRunning;
+
     public String getClientId() {
         return clientId;
+    }
+
+    public String getClientSecret() {
+        return clientSecret;
     }
 
     public String getRedirectUri() {
@@ -52,5 +62,9 @@ public class ClientConfig {
 
     public String getTokenUrl() {
         return tokenUrl;
+    }
+
+    public boolean isInitRunning() {
+        return initRunning;
     }
 }

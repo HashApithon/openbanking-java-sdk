@@ -6,12 +6,14 @@ log4j:
 
 client:
   id: 2AO66SW3w0Wespk6Qfx6smSfdDhcdH6KSG1tPEOdBMg=
+  secret: 7okeQb-u3_nXf5A2_RUv7CUzVtjx-1zqUu2FkW5lXq0=
   redirectUri: http://redirect.acc.com
   financialId: 0015800000jfwB4AAI
   state: ABC
   authorizationUsername: 123456789012@team.acc.org
   authorizationAccount: 50000012345601
   tokenUrl: https://ob.rbs.useinfinite.io/token
+  initRunning: true
 
 
 tls:

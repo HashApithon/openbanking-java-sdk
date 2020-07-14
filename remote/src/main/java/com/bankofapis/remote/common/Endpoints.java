@@ -3,6 +3,7 @@ package com.bankofapis.remote.common;
 public class Endpoints {
 
     public static final String AUTHORIZATION_OAUTH2_ENDPOINT = "/authorization.oauth2";
+    public static final String OB_JOURNEY_INIT = "/init";
 
     public static final String ACCOUNT_ACCESS_CONSENT_ENDPOINT = "/account-access-consents";
     public static final String ACCOUNT_LIST_ENDPOINT = "/accounts";
