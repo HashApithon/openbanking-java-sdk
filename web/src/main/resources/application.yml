@@ -5,9 +5,9 @@ log4j:
       wire: DEBUG
 
 client:
-  id: 2AO66SW3w0Wespk6Qfx6smSfdDhcdH6KSG1tPEOdBMg=
-  secret: 7okeQb-u3_nXf5A2_RUv7CUzVtjx-1zqUu2FkW5lXq0=
-  redirectUri: http://redirect.acc.com
+  id: RgmLcqWcWH_hZRYynUmRNFuewUXWd6CkKX49b-BcXr8=
+  secret: SeHH5Jfg7q1IE3uhmgkX9yHnRJxp9kO4aM5ew-XFg8k=
+  redirectUri: http://localhost:4001/redirecting
   financialId: 0015800000jfwB4AAI
   state: ABC
   authorizationUsername: 123456789012@team.acc.org
