@@ -23,9 +23,8 @@ public class AispController {
     }
 
     @GetMapping(value = OB_JOURNEY_INIT)
-    public void initialize(HttpServletResponse response) {
-        response.setHeader("Location", aispService.initialize());
-        response.setStatus(302);
+    public String initialize(HttpServletResponse response) {
+        return aispService.initialize();
     }
 
     @PostMapping(value = ACCOUNT_ACCESS_CONSENT_ENDPOINT)
