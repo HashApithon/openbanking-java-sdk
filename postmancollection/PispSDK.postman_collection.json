@@ -56,13 +56,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/token",
+					"raw": "http://localhost:8080/open-banking/v3/token",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"open-banking",
+						"v3",
 						"token"
 					]
 				}
@@ -260,16 +262,18 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"code\":\"6aa657af-6cb6-4def-9429-b90a064eb5bd\"}"
+					"raw": "{\"code\":\"e50f4995-1c46-493e-b34f-ead1bec75696\"}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/token",
+					"raw": "http://localhost:8080/open-banking/v3/token",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"open-banking",
+						"v3",
 						"token"
 					]
 				}
